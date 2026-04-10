@@ -33,7 +33,7 @@ from litellm_helpers import (
 @dataclass
 class LLMConfig:
     """Configuration for LLM behavior"""
-    model_name: str = "claude-3-5-sonnet"  # Using Claude 3.5 Sonnet (Haiku 3.5 requires inference profile)
+    model_name: str = "gpt-4o-mini"  # Using Claude 3.5 Sonnet (Haiku 3.5 requires inference profile)
     temperature: float = 0.0
     top_p: float = 1.0
     top_k: int = 250
