@@ -134,7 +134,7 @@ def generate_replacement_cell_values_for_single_line(
     user_msg = f"<schema>\n\n{schema_preview}\n\n</schema>\n\n\n<column>\n{json.dumps(removed_cell)}\n</column>\n\n<question>\n{line['question']}\n</question>\n\n<sql>\n{line['query']}\n</sql>"
     tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
     tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-    response_obj = litellm_router.completion(messages=tmp_msgs, model="claude-3-sonnet")
+    response_obj = litellm_router.completion(messages=tmp_msgs, model="gpt-4o-mini")
     response = response_obj.choices[0].message.content
     # print(user_msg)
     # print(response)
@@ -221,7 +221,7 @@ def replacement_cell_critic_model_for_single_line(
     user_msg = f"<schema>\n\n{schema_preview}\n\n</schema>\n\n\n<column>\n{json.dumps(removed_cell)}\n</column>\n\n<question>\n{line['question']}\n</question>\n\n<response>\n{templated_explanation}\nThe two possible SQL responses to the question is:\n<sql_list>\n<sql>{alternative_sqls[0]['SQL']}</sql>\n<sql>{alternative_sqls[1]['SQL']}</sql>\n</sql_list>\n<response>"
     tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
     tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-    response_obj = litellm_router.completion(messages=tmp_msgs, model="claude-3-sonnet")
+    response_obj = litellm_router.completion(messages=tmp_msgs, model="gpt-4o-mini")
     response = response_obj.choices[0].message.content
     # print(user_msg)
     # print(response)
@@ -359,7 +359,7 @@ def generate_followup_question_for_single_line(
         user_msg = f"<schema>\n{schema_preview}\n</schema>\n\n<conversation>\n{json.dumps(conversation_list, indent=2)}\n</conversation>"
         tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
         tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-        response_obj = litellm_router.completion(messages=tmp_msgs, model="claude-3-sonnet")
+        response_obj = litellm_router.completion(messages=tmp_msgs, model="gpt-4o-mini")
         response = response_obj.choices[0].message.content
         # print(user_msg)
         # print("---" * 30)
@@ -450,7 +450,7 @@ def select_most_natural_followup_for_split(
         user_msg = f"<schema>\n\n{schema_preview}\n\n</schema>\n\n\n<conversation>\n\n{json.dumps(templated_conversation, indent=2)}\n\n</conversation>\n\n<follow-up>\n{json.dumps(candidate_follow_ups, indent=2)}\n</follow-up>"
         tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
         tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-        response_obj = litellm_router.completion(messages=tmp_msgs, model="claude-3-sonnet")
+        response_obj = litellm_router.completion(messages=tmp_msgs, model="gpt-4o-mini")
         response = response_obj.choices[0].message.content
         # print(user_msg)
         # print("---" * 30)
@@ -551,7 +551,7 @@ def rephrase_the_templated_explanation_single_line(
     user_msg = f"<schema>\n\n{schema_preview}\n\n</schema>\n\n\n<conversation>\n\n{json.dumps(conversation_with_followup, indent=2)}\n\n</conversation>"
     tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
     tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-    response_obj = litellm_router.completion(messages=tmp_msgs, model="claude-3-sonnet")
+    response_obj = litellm_router.completion(messages=tmp_msgs, model="gpt-4o-mini")
     response = response_obj.choices[0].message.content
     # print(user_msg)
     # print("---" * 30)

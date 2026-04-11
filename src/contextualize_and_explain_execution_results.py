@@ -115,7 +115,7 @@ def contextualize_followup_question_single_line(
     user_msg = f"<schema>\n\n{schema_preview}\n\n</schema>\n\n\n<conversation>\n\n{json.dumps(final_conv, indent=2)}\n\n</conversation>"
     tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
     tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-    response = router_completion_with_ratelimit_retry(messages=tmp_msgs, model="claude-3-sonnet", router=litellm_router)
+    response = router_completion_with_ratelimit_retry(messages=tmp_msgs, model="gpt-4o-mini", router=litellm_router)
     # print(user_msg)
     # print("---" * 30)
     # print(response)
@@ -170,7 +170,7 @@ def add_execution_explanation_single_line(
     user_msg = f"<schema>\n\n{schema_preview}\n\n</schema>\n\n\n<conversation>\n\n{json.dumps(final_conv, indent=2)}\n\n</conversation>\n\n<execution_results>\n```\n{execution_results}\n```\n</execution_results>"
     tmp_msgs = few_shots + [create_simple_message(message=user_msg, role="user", message_type="litellm")]
     tmp_msgs = [{"role": "system", "content": system_prompt}] + tmp_msgs
-    response = router_completion_with_ratelimit_retry(messages=tmp_msgs, model="claude-3-sonnet", router=litellm_router)
+    response = router_completion_with_ratelimit_retry(messages=tmp_msgs, model="gpt-4o-mini", router=litellm_router)
     # print(user_msg)
     # print("---" * 30)
     # print(response)

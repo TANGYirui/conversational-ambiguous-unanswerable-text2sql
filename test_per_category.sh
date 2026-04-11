@@ -47,29 +47,26 @@ LOG_DIR="$BASE_DIR/logs"
 # Set PYTHONPATH to include src directory
 export PYTHONPATH="$SRC_DIR:$PYTHONPATH"
 
-# Unset any existing AWS IAM credentials that might conflict with bearer token auth
-unset AWS_ACCESS_KEY_ID
-unset AWS_SECRET_ACCESS_KEY
-unset AWS_SESSION_TOKEN
-unset AWS_REGION
-
-# Load AWS Bedrock bearer token credentials from .vscode/.env
-# Only export bearer token variables, not IAM credentials to avoid conflicts
+# ==========================================
+# Azure OpenAI 环境变量加载替换了原本的 AWS 逻辑
+# ==========================================
 if [ -f "$BASE_DIR/.vscode/.env" ]; then
-    export AWS_BEARER_TOKEN_BEDROCK=$(grep '^AWS_BEARER_TOKEN_BEDROCK=' "$BASE_DIR/.vscode/.env" | cut -d'=' -f2)
-    export AWS_BEARER_TOKEN_BEDROCK_REGION=$(grep '^AWS_BEARER_TOKEN_BEDROCK_REGION=' "$BASE_DIR/.vscode/.env" | cut -d'=' -f2)
+    # 自动读取并 export .env 文件里所有非注释的内容
+    export $(grep -v '^#' "$BASE_DIR/.vscode/.env" | xargs)
 
-    if [ -n "$AWS_BEARER_TOKEN_BEDROCK" ] && [ -n "$AWS_BEARER_TOKEN_BEDROCK_REGION" ]; then
-        echo "✓ Loaded AWS Bedrock bearer token from .vscode/.env"
-        echo "  Region: $AWS_BEARER_TOKEN_BEDROCK_REGION"
+    if [ -n "$AZURE_API_KEY" ] && [ -n "$AZURE_API_BASE" ] && [ -n "$AZURE_API_VERSION" ]; then
+        echo "✓ Loaded Azure OpenAI credentials from .vscode/.env"
+        echo "  API Base: $AZURE_API_BASE"
+        echo "  API Version: $AZURE_API_VERSION"
     else
-        echo "⚠ Warning: AWS bearer token credentials not found in .vscode/.env"
+        echo "⚠ Error: Azure credentials (AZURE_API_KEY, AZURE_API_BASE, AZURE_API_VERSION) missing in .vscode/.env"
         exit 1
     fi
 else
-    echo "⚠ Error: .vscode/.env not found. AWS Bedrock authentication will fail."
+    echo "⚠ Error: .vscode/.env not found. Azure OpenAI authentication will fail."
     exit 1
 fi
+# ==========================================
 
 # Create logs and output directories
 mkdir -p "$LOG_DIR"
@@ -265,18 +262,21 @@ if [ "$WITH_CLASSIFICATION" = true ]; then
     if [ -f "$COMBINED_FILE" ]; then
         CLASSIFICATION_LOG="$LOG_DIR/classification_${TIMESTAMP}.log"
         START_TIME=$(date +%s)
+        # ==========================================
+        # 这里把原本的 claude-3-5-sonnet 改成了 gpt-4o-mini
+        # ==========================================
         if $PYTHON "$SRC_DIR/experiment/amb_unans_classification.py" \
             --infp "$COMBINED_FILE" \
             --classification-type binary \
-            --llm-model claude-3-5-sonnet \
+            --llm-model gpt-4o-mini \
             --cell-value-key lexicalAndOracle \
             --num-processes 12 > "$CLASSIFICATION_LOG" 2>&1; then
             END_TIME=$(date +%s)
             DURATION=$((END_TIME - START_TIME))
             echo -e "${GREEN}✓${NC} Classification completed in ${DURATION}s"
 
-            # Check if classification file was created
-            CLASSIFICATION_FILE="${COMBINED_FILE}.binary_classification___claude-3-5-sonnet___lexicalAndOracle.jsonl"
+            # Check if classification file was created (也同步更改了检查生成文件的后缀)
+            CLASSIFICATION_FILE="${COMBINED_FILE}.binary_classification___gpt-4o-mini___lexicalAndOracle.jsonl"
             if [ -f "$CLASSIFICATION_FILE" ]; then
                 CLASSIFICATION_COUNT=$(wc -l < "$CLASSIFICATION_FILE")
                 echo "  Classification file: $CLASSIFICATION_FILE"
