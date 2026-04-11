@@ -185,13 +185,13 @@ echo ""
 
 # Define all categories
 declare -a CATEGORIES=(
-    # "1|ambiguous|ambiguous_SELECT_column|ambiguous_select_column_main|Ambiguous_SELECT_Column"
-    # "2|ambiguous|ambiguous_VALUES_within_column|ambiguous_values_within_column_main|Ambiguous_VALUES_within_Column"
-    # "3|ambiguous|ambiguous_VALUES_across_columns|ambiguous_values_across_columns_main|Ambiguous_VALUES_across_Columns"
-    # "4|ambiguous|vague_filter_term|vague_filter_term_main|Ambiguous_Filter_Term"
-    # "5|unanswerable|nonexistent_select_column|nonexistent_select_column_main|Nonexistent_SELECT_Column"
-    # "6|unanswerable|nonexistent_value|nonexistent_value_main|Nonexistent_Value"
-    # "7|unanswerable|nonexistent_where_column|nonexistent_where_column_main|Nonexistent_WHERE_Column"
+    "1|ambiguous|ambiguous_SELECT_column|ambiguous_select_column_main|Ambiguous_SELECT_Column"
+    "2|ambiguous|ambiguous_VALUES_within_column|ambiguous_values_within_column_main|Ambiguous_VALUES_within_Column"
+    "3|ambiguous|ambiguous_VALUES_across_columns|ambiguous_values_across_columns_main|Ambiguous_VALUES_across_Columns"
+    "4|ambiguous|vague_filter_term|vague_filter_term_main|Ambiguous_Filter_Term"
+    "5|unanswerable|nonexistent_select_column|nonexistent_select_column_main|Nonexistent_SELECT_Column"
+    "6|unanswerable|nonexistent_value|nonexistent_value_main|Nonexistent_Value"
+    "7|unanswerable|nonexistent_where_column|nonexistent_where_column_main|Nonexistent_WHERE_Column"
     "8|unanswerable|unsupported_joins|unsupported_join_generation_main|Unsupported_Join"
 )
 
